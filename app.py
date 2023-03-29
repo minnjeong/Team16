@@ -9,10 +9,11 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 
-## 맥 유저들 안되면 이거 주석으로 바꾸세요.
+# 맥 유저들 안되면 이거 주석으로 바꾸세요.
 # ca = certifi.where()
 # client = MongoClient("mongodb+srv://sparta16:sparta16@cluster16.b0dkofq.mongodb.net/?retryWrites=true&w=majority", tlsCAFile = ca)
-client = MongoClient("mongodb+srv://sparta16:sparta16@cluster16.b0dkofq.mongodb.net/?retryWrites=true&w=majority")
+client = MongoClient(
+    "mongodb+srv://sparta16:sparta16@cluster16.b0dkofq.mongodb.net/?retryWrites=true&w=majority")
 db = client.movie
 
 
@@ -24,15 +25,15 @@ def home():
 @app.route("/movie/flag", methods=["GET"])
 def flag_check():
     # flag 값 가져오기.(맨 처음에 비어있으면 True로 값 넣어줌. 이후부터는 False로 바꿔줌.)
-    flagList = list(db.flag.find({},{"_id":False}))
-    if flagList == None or len(flagList)==0 :
-        db.flag.insert_one({"flag":True})
-        flagList = list(db.flag.find({},{"_id":False}))
+    flagList = list(db.flag.find({}, {"_id": False}))
+    if flagList == None or len(flagList) == 0:
+        db.flag.insert_one({"flag": True})
+        flagList = list(db.flag.find({}, {"_id": False}))
     else:
-        flagList = list(db.flag.find({},{"_id":False}))
+        flagList = list(db.flag.find({}, {"_id": False}))
     flag = flagList[-1]
     # print(flag)  ## 맨처음에는 무조건 {'flag': True}, 그 다음부터는 False로 영화 메인 화면에 포스팅 되는 거 막는 역할
-    ## 여기 밑에서  {"flag":{'flag': True}} 아니면 {"flag":{'flag': False}}이렇게 넘어감.
+    # 여기 밑에서  {"flag":{'flag': True}} 아니면 {"flag":{'flag': False}}이렇게 넘어감.
     return jsonify({"flag": flag})
 
 
@@ -68,12 +69,12 @@ def movie_crawl():
 
             # 별점 확인(실수 형태 9.xx)
             star = float(s.text.strip())
-            print(star) #<class 'float'>
+            print(star)  # <class 'float'>
             # starBox.append(star)
 
             # 코드 확인
             code = int(l['href'].split("=")[-1])
-            print(code) #<class 'int'>
+            print(code)  # <class 'int'>
             # urlBox.append(code)
             CrawlBox.append({"code": code, "star": star})
 
@@ -90,16 +91,18 @@ def movie_crawl():
         image = soup.select_one('meta[property="og:image"]')['content']
         desc = soup.select_one('meta[property="og:description"]')['content']
         url = soup.select_one('meta[property="og:url"]')['content']
+        comment = "테스트용 코멘트입니다. 주석필요"
 
-        ## --------------이 num이 각 포스터의 고유 인덱스이자 랭킹을 나타내는 숫자역할을 할 것임. 두 가지 역할을 하는 것. 예를 들어 포스터 삭제를 하거나 찜 등록을 할 때 이 num을 이용해서 등록할 것.--------------
+        # --------------이 num이 각 포스터의 고유 인덱스이자 랭킹을 나타내는 숫자역할을 할 것임. 두 가지 역할을 하는 것. 예를 들어 포스터 삭제를 하거나 찜 등록을 할 때 이 num을 이용해서 등록할 것.--------------
         num = 1 if len(docList) == 0 else docList[-1]['num'] + 1
-        docList.append({"num": num, "url": url, "title": title, "image": image, "star": Crawl['star'], "desc": desc})
+        docList.append({"num": num, "url": url, "title": title,
+                       "image": image, "star": Crawl['star'], "desc": desc, "comment":comment})
 
     db.movie.insert_many(docList)
 
-    ## --------------다시 플래그 상태 바꿔서 영화 데이터 더 이상 못 불러오게 하기. --------------
-    db.flag.update_one({"flag": True}, {"$set":{"flag": False}})
-    flagList = list(db.flag.find({},{"_id":False}))
+    # --------------다시 플래그 상태 바꿔서 영화 데이터 더 이상 못 불러오게 하기. --------------
+    db.flag.update_one({"flag": True}, {"$set": {"flag": False}})
+    flagList = list(db.flag.find({}, {"_id": False}))
     flag = flagList[-1]
     # print(flag) ## {'flag': False}
     return jsonify({"flag": flag})
@@ -114,13 +117,21 @@ def movie_get():
 @app.route("/movie/delete", methods=["POST"])
 def movie_delete():
     num_receive = request.form["num_give"]
-    ## -----------fetch함수를 사용하여 서버로 넘어올 때는 데이터베이스에 넘어가기 직전의 JSON형태로 변환시켜주기 때문에 숫자는 문자화가 되서 넘어와진다. 그래서 int메서드로 다시 정수형으로 바꿔준다.------------
-    ## https://www.daleseo.com/js-json/ JSON 숫자 변형과 관련된 블로그
+    # -----------fetch함수를 사용하여 서버로 넘어올 때는 데이터베이스에 넘어가기 직전의 JSON형태로 변환시켜주기 때문에 숫자는 문자화가 되서 넘어와진다. 그래서 int메서드로 다시 정수형으로 바꿔준다.------------
+    # https://www.daleseo.com/js-json/ JSON 숫자 변형과 관련된 블로그
     num = int(num_receive)
     db.movie.delete_one({"num": num})
     return jsonify({'msg': "삭제 완료!"})
 
 
+@app.route("/movie/edit", methods=["POST"])
+def movie_edit():
+    num_receive = request.form["num_give"]
+    comment_receive = request.form["comment_give"]
+    num = int(num_receive)
+    db.movie.update_one({"num": num},{"$set",{"comment": comment_receive}})
+    return jsonify({'msg': "수정 완료!"})
+
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
-
