@@ -7,8 +7,9 @@ from pymongo import MongoClient
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
-client = MongoClient("mongodb+srv://sparta16:sparta16@cluster16.b0dkofq.mongodb.net/?retryWrites=true&w=majority")
-db = client.movie
+## 주석 풀고 id password 입력후 사용하세요!!
+# client = MongoClient("mongodb+srv://id:password@cluster16.b0dkofq.mongodb.net/?retryWrites=true&w=majority")
+# db = client.movie
 
 @app.route('/')
 def home():
@@ -29,7 +30,7 @@ def flag_check():
     return jsonify({ "flag": flag })
     
 @app.route("/movie", methods=["POST"])
-def movie_post():
+def movie_crawl():
     ## 다시 플래그 상태 바꿔서 영화 데이터 더 이상 못 불러오게 하기.
     db.flag.update_one({"flag": True}, {"$set":{"flag": False}})
     flagList = list(db.flag.find({},{"_id":False}))

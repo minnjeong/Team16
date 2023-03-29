@@ -18,7 +18,7 @@ db = client.movie
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index4.html')
 
 
 @app.route("/movie/flag", methods=["GET"])
@@ -37,7 +37,7 @@ def flag_check():
 
 
 @app.route("/movie", methods=["POST"])
-def movie_post():
+def movie_crawl():
     ### ---------------------------------------랭크 크롤링 --------------------------------------------###
     # 오늘 날짜(아니면 특정 날짜 정해둬도 됨 => 요일 지날 때마다 계속 바뀜. 아예 날짜 한 날짜로 정하는게 좋을 듯)
     today = datetime.datetime.today()
@@ -66,9 +66,9 @@ def movie_post():
             # 오늘 가져온 것 확인(근데, rank, name 안 쓸 거. 확인하기 위한 코드)
             print(rank, n.text.strip(), s.text.strip(), l['href'], sep="\t"*2)
 
-            # 별점 확인(int 쓰니까 에러뜨네...)
-            star = s.text.strip()
-            print(star) #<class 'str'>
+            # 별점 확인(실수 형태 9.xx)
+            star = float(s.text.strip())
+            print(star) #<class 'float'>
             # starBox.append(star)
 
             # 코드 확인

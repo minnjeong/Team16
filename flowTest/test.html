@@ -31,7 +31,6 @@
             await fetch('/movie/flag')
                 .then((res) => res.json())
                 .then((data) => {
-                    // 여기서 이러면 data 뽑혔나?
                     console.log(data)    // >>> {flag: {flag: true}}
                     flag = data["flag"]["flag"]
                 })
@@ -39,9 +38,6 @@
         }
         $(document).ready(async function () {
             let flag = await checking()
-            // console.log(typeof(flag))  // >>> object
-            // console.log(flag) // >>> {flag:true}
-            // console.log(flag["flag"] === true)  // >>> true
 
             if(flag === true){
                 await posting();
@@ -55,16 +51,10 @@
         }
 
         function posting() {
-            // let url = $("#url").val()
-            // let comment = $("#comment").val()
-            // let star = $("#star_give").val()  // 여기서는 숫자이지만 post 넘어가면 app.py 에서는 문자형태로 변함.
             let test = "test start"
             console.log("test start")
             let formData = new FormData();
             formData.append("test_give", test)
-            // formData.append("url_give", url);
-            // formData.append("comment_give", comment);
-            // formData.append("star_give", star);
 
             fetch('/movie', { method: "POST", body: formData })
                 .then((res) => res.json())

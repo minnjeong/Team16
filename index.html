@@ -165,16 +165,10 @@
         // --------------------------------------------------------------------------------------------
         // 크롤링
         function crawling() {
-            // let url = $("#url").val()
-            // let comment = $("#comment").val()
-            // let star = $("#star_give").val()  // 여기서는 숫자이지만 post 넘어가면 app.py 에서는 문자형태로 변함.
             let test = "test start"
             console.log("test start")
             let formData = new FormData();
             formData.append("test_give", test)
-            // formData.append("url_give", url);
-            // formData.append("comment_give", comment);
-            // formData.append("star_give", star);
 
             fetch('/movie', { method: "POST", body: formData })
                 .then((res) => res.json())
