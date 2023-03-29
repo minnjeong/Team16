@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영화 리뷰</title>
+    <link rel="stylesheet" href="review.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        function open_box() {
+            $('#review_box').show()
+        }
+        function close_box() {
+            $('#review_box').hide()
+        }
+    </script>
+    <style>
+        .card-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-body {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .st_off {
+            width: 122px;
+        }
+
+        .st_off,
+        .st_off span {
+            display: inline-block;
+            height: 22px;
+            overflow: hidden;
+            background: url(star.png)no-repeat;
+        }
+
+        .st_off span {
+            background-position: left bottom;
+            line-height: 0;
+            vertical-align: top;
+        }
+
+        .star_score {
+            /* width: 50px; */
+            height: 22px;
+
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <!-- 커버 -->
+    <div class="review_pic">
+        <h1>영화 리뷰</h1>
+    </div>
+    <div class="article">
+        <!-- 영화정보 -->
+        <div class="card-wrapper">
+            <div class="movie_info_area" style="display: block;">
+                <div class="movie_info">
+                    <h3 class="movie_title">
+                        <!-- 링크, 제목 -->
+                        <a href="">제목</a>
+                    </h3>
+                    <!-- 서브타이틀, 개봉년도 -->
+                    <strong class="movie_sub_title" title="서브타이틀">서브타이틀</strong>
+                    <!-- 관람객, 기자.평론가 점수 / 별 잘 모르겠습니다..-->
+                    <div class="main_score">
+                        <div class="star_score">
+                            <span class="st_off">
+                                <span class="st_on" style="width:74.1%">관람객 평점 74.1점</span>
+                            </span>
+                            <em class="num7">7</em>
+                            <em class="dot">.</em>
+                            <em class="num4">4</em>
+                            <em class="num1">1</em>
+                        </div>
+                    </div>
+                    <!-- 개요 - 장르, 개봉일자 -->
+                    <dl class="info_spec">
+                        <dt class="step1">
+                            <em>개요</em>
+                        </dt>
+                        <dd>
+                            <p>
+                                <span>
+                                    <a href="">장르 입력</a>
+                                    ,
+                                    <a href="">장르 입력</a>
+                                </span>
+                                <span class="line"> | </span>
+                                <span>
+                                    <a href="">년도</a>
+                                    <a href="">일자</a>
+                                    개봉
+                                </span>
+                            </p>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- 영화 포스터 -->
+            <div class="poster">
+                <a href="#" onclick="">
+                    <img src="" alt="제목">
+                </a>
+            </div>
+        </div>
+
+
+
+        <!-- 영화 리뷰 작성하기 -->
+        <div class="review_btn">
+            <button onclick="open_box()">영화 기록하기</button>
+        </div>
+
+        <div class="myreview_write" id="review_box">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">별점</label>
+                <select class="form-select" id="star">
+                    <option selected>-- 선택하기 --</option>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+            </div>
+            <div class="form-floating">
+                <textarea id="comment" class="form-control" placeholder="Leave a comment here"></textarea>
+                <label for="floatingTextarea2">후기를 작성해주세요</label>
+            </div>
+            <div class="myreview_btns">
+                <button onclick="posting()" type="button" class="btn btn-dark">기록하기</button>
+                <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 영화 리뷰 카드 -->
+    <div class="review_cards" id="comment-list">
+        <div class="card">
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">영화 너무 멋져요!</p>
+                    <footer class="blockquote-footer">홍길동</footer>
+                </blockquote>
+                <button type="button" class="btn btn-outline-danger">삭제</button>
+            </div>
+        </div>
+    </div>
+
+
+    </div>
+
+</body>
+
+</html>
