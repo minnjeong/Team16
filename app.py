@@ -169,8 +169,9 @@ def api_login():
 	if result is not None:
 		payload = {
 			'id': id_receive,
-			'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-		}
+			'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+			'nickname': result['nick']
+        }
 		token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 		return jsonify({'result': 'success', 'token': token, 'nickname': result['nick']})
 	else:
