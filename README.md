@@ -5,8 +5,9 @@
 말 그대로 테스트를 위한 폴더. 
 절대주의!!! 몽고디비 부분 자신의 리포지토리로 바꿔서 사용할 것.
 기존 거는 서버용 데이터베이스임.
-1. test.py
-2. test.html
+1. flagTest.py: flag 흐름, 형태 확인용.
+2. test.html: 크롬 개발자도구 콘솔 열어서 flag 혹은 데이터 확인할 것.
+3. appTest.py: app.py 복제본.
 
 # Crawling.js
 1. 크롤링 재료, 과정 미리 보기.
