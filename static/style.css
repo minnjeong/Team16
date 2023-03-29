@@ -1,0 +1,79 @@
+#auth-container {
+  position: absolute;
+  font-family: sans-serif;
+  font-size: medium;
+  background-color: #b8b8b8;
+  border-radius: 10px;
+  height: 300px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* tabs -> tab / tabcontent */
+.tabs {
+  padding: 5px 15px 0 15px;
+  top: 0;
+  left: 0;
+}
+
+.logout {
+  background-color: #333;
+  height: 300px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.greeting {
+  height: fit-content;
+  font-size: large;
+  color: #669900;
+}
+
+.input-tabs-section {
+  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab.active-tab {
+  background-color: #333;
+  color: #669900;
+}
+
+.tab {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  background-color: grey;
+  cursor: pointer;
+  font-size: small;
+  color: #1c1c1c;
+
+}
+
+.tab-content {
+  padding: 10px;
+  width: auto;
+  background-color: white;
+}
+
+/* 초기화면에 회원가입 숨기기 */
+#register-section {
+  display: none;
+}
+
+/* 버튼들은 auth-container 우하단 위치 */
+#register-btn,
+#logout-btn,
+#login-btn {
+  position: absolute;
+  padding: 15px;
+  bottom: 0;
+  right: 0;
+  border-radius: 0 0 10px 0;
+  border-color: transparent;
+}
