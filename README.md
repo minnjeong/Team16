@@ -17,3 +17,7 @@
 1. App.py
 2. index.html
 
+# JSON 데이터
+db = client.movie
+1. db.movie 저장된 데이터=> {"num": num, "url": url, "title": title, "image": image, "star": Crawl['star'], "desc": desc}
+2. db.flag 저장된 데이터 =>  첫 로딩이면 {"flag":{'flag': True}} or 이전에 로딩 했으면 {"flag":{'flag': False}}
