@@ -4,8 +4,13 @@ import datetime
 import pyautogui
 import time
 import certifi
+# jwt 토큰, 패스워드 해쉬화
+import jwt
+import hashlib
+#
 from pymongo import MongoClient
 from flask import Flask, render_template, request, jsonify
+
 app = Flask(__name__)
 
 
@@ -15,7 +20,10 @@ app = Flask(__name__)
 client = MongoClient(
     "mongodb+srv://sparta16:sparta16@cluster16.b0dkofq.mongodb.net/?retryWrites=true&w=majority")
 db = client.movie
+user_db = client.group_16 #유저 db
 
+# 시크릿 키
+SECRET_KEY = 'GROUP16' 
 
 @app.route('/')
 def home():
@@ -132,6 +140,47 @@ def movie_edit():
     db.movie.update_one({"num": num},{"$set",{"comment": comment_receive}})
     return jsonify({'msg': "수정 완료!"})
 
+# 회원가입 
+@app.route('/api/register', methods=['POST'])
+def api_register():
+	id_receive = request.form['id_give']
+	pw_receive = request.form['pw_give']
+	nickname_receive = request.form['nickname_give']
+
+	existing_id = user_db.user.find_one({'id': id_receive})
+	if existing_id:
+		return jsonify({'result': 'error', 'msg': 'ID already exists'})
+	existing_nickname = user_db.user.find_one({'nick': nickname_receive})
+	if existing_nickname:
+		return jsonify({'result': 'error', 'msg': 'Nickname already exists'})
+
+	pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
+	user_db.user.insert_one({'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
+	return jsonify({'result': 'success'})
+
+#로그인
+@app.route('/api/login', methods=['POST'])
+def api_login():
+	id_receive = request.form['id_give']
+	pw_receive = request.form['pw_give']
+	pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
+	result = user_db.user.find_one({'id': id_receive, 'pw': pw_hash})
+
+	if result is not None:
+		payload = {
+			'id': id_receive,
+			'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+			'nickname': result['nick']
+        }
+		token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+		return jsonify({'result': 'success', 'token': token, 'nickname': result['nick']})
+	else:
+		return jsonify({'result': 'fail', 'msg': 'Incorrect ID or PW.'})
+
+@app.route('/page1')
+def review_get():
+	data = request.args.get('data')
+	return f'Url Data passed: {data}'
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

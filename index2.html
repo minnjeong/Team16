@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <title>스파르타 피디아</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mytitle {
+            width: 100%;
+            height: 250px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg');
+            background-position: center;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mytitle>button {
+            width: 200px;
+            height: 50px;
+
+            background-color: transparent;
+            color: white;
+
+            border-radius: 50px;
+            border: 1px solid white;
+
+            margin-top: 10px;
+        }
+
+        .mytitle>button:hover {
+            border: 2px solid white;
+        }
+
+        .mycomment {
+            color: gray;
+        }
+
+        .mycards {
+            margin: 20px auto 0px auto;
+            width: 95%;
+            max-width: 1200px;
+        }
+
+        .mypost {
+            width: 95%;
+            max-width: 500px;
+            margin: 20px auto 0px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+
+            display: none;
+        }
+
+        .mybtns {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 20px;
+        }
+
+        .mybtns>button {
+            margin-right: 10px;
+        }
+
+        .card-body .btn {
+            float: right;
+        }
+
+        .sortpage {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 10px;
+        }
+
+        .sortpage>button {
+            text-align: center;
+            padding: 5px;
+            border: 1px solid black;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+    </style>
+    <script>
+        // 새로고침시 기존에 값 유지방법? (세션 스토리지와 로컬 스토리지 , 토큰) 검색.
+        // onload ? load ?  공부하기!!
+        // $(window).load(function(){
+        //     // 전부(스크립, DOM) 로딩 완료되었을 때 
+        // })
+
+        // 현재는 MongoDB 데이터베이스로 flag에 f,s값을 줘서, 재로딩 후 포스팅 또 해버리는 현상 막았음.
+        // 로컬이나 세션으로도 재로딩되면서 포스팅 또 해버리는 현상 막는 방법 있는지 알아보기.
+        // localStorage.setItem('flag', f)
+        // 만약 sort 를 두 번째나 세 번째로 바꾼 후 꺼버린다면? 그리고 새로운 곳에서 처음으로 접속한다면?
+        $(document).ready(async function () {
+            // await crawling(); // flag에 s를 넣었네 // 처음이면 cur로 유지하게...
+            let flag = await getFlag()
+            let sort = await getSort() // cur // changeSort 로 cnt로바꿨음
+            // localStorage.setItem("visit", JSON.stringify({"visited": true}))
+            if(flag === "f" || Boolean(flag) === false){
+                if(Boolean(flag) === false){ 
+                    await crawling();  // flag를 s로 바꿔줌. // 얘는 어차피 flag가 비어있을 때만 시작함.
+                }
+
+                if(sort === "cur"){
+                    await curlisting();
+                } else if(sort === "cnt"){
+                    await cntlisting();
+                } else if(sort === "pnt"){
+                    await pntlisting();
+                }
+                lotateFlag(); // 얘는 s로 바꿔주고 리로딩해야하나
+                // localStorage.setItem("visit", JSON.stringify({"visited": false}))
+                // 플래그도 s로 바꾼다?
+                // 다시 리로드?
+            } else if(flag === "s"){
+                if(sort === "cur"){
+                    await curlisting();
+                } else if(sort === "cnt"){
+                    await cntlisting();
+                } else if(sort === "pnt"){
+                    await pntlisting();
+                }
+                initFlag(); // 여기서 flag를 f 로 바꿔줘야 리로드 됐을 때 다시 f로 들어감
+                // let state = JSON.parse(localStorage.getItem(("visit")))["visited"]
+                // if(Boolean(state) == true){
+                //     window.location.reload();
+                // }
+            }
+        })
+
+        async function curlisting() {
+            await $("#cards-box").empty()
+            let result = await fetch('/movie/cur')
+            let result2 = await result.json()
+            let rows = await result2["movie_list"]
+            let result4 = await rows.forEach(a => {
+                let num = a['num']
+                let title = a["title"]
+                let image = a["image"]
+                let star_count = a["star"]
+                let comment = a["comment"]
+                let desc = a["desc"]
+                console.log(typeof (star_count)) // >>> 여기서 star_count는 float 실수( 9.xx ) 형태임. CSS 공부해서 네이버처럼 10점 만점으로 9.8점이면 98%만 별 칠하던가, 그게 힘들면 소수점 덜어주려면 Math.floor 쓰던가 해야함. number 형태로 바꿔줘야 함.
+                // star_count = Number(a["star"])
+
+                let star = '⭐'.repeat(star_count)
+                // src = "${image}" 가 아니라 그냥 src = ${image} 해도 오류 발생 안하네?!
+                let temp_html = `<div class="col">
+                                    <div class="card h-100">
+                                        <img src=${image}
+                                            class="card-img-top">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${title}</h5>
+                                            <p class="card-text">${desc}</p>
+                                            <p>${star}</p>
+                                            <p class="mycomment">${comment}</p>
+                                            <button onclick="delete_post(${num});" type="button" class="btn btn-outline-dark">삭제하기</button>
+                                        </div>
+                                    </div>
+                                </div>`
+                $("#cards-box").append(temp_html)
+            })
+        }
+
+
+        async function cntlisting() {
+            await $("#cards-box").empty()
+            let result = await fetch('/movie/cnt')
+            let result2 = await result.json()
+            let rows = await result2["movie_list"]
+            let result4 = await rows.forEach(a => {
+                let num = a['num']
+                let title = a["title"]
+                let image = a["image"]
+                let star_count = a["star"]
+                let comment = a["comment"]
+                let desc = a["desc"]
+                console.log(typeof (star_count)) // >>> 여기서 star_count는 float 실수( 9.xx ) 형태임. CSS 공부해서 네이버처럼 10점 만점으로 9.8점이면 98%만 별 칠하던가, 그게 힘들면 소수점 덜어주려면 Math.floor 쓰던가 해야함. number 형태로 바꿔줘야 함.
+                // star_count = Number(a["star"])
+
+                let star = '⭐'.repeat(star_count)
+                // src = "${image}" 가 아니라 그냥 src = ${image} 해도 오류 발생 안하네?!
+                let temp_html = `<div class="col">
+                                    <div class="card h-100">
+                                        <img src=${image}
+                                            class="card-img-top">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${title}</h5>
+                                            <p class="card-text">${desc}</p>
+                                            <p>${star}</p>
+                                            <p class="mycomment">${comment}</p>
+                                            <button onclick="delete_post(${num});" type="button" class="btn btn-outline-dark">삭제하기</button>
+                                        </div>
+                                    </div>
+                                </div>`
+                $("#cards-box").append(temp_html)
+            })
+        }
+
+
+
+        async function pntlisting() {
+            await $("#cards-box").empty()
+            let result = await fetch('/movie/pnt')
+            let result2 = await result.json()
+            let rows = await result2["movie_list"]
+            let result4 = await rows.forEach(a => {
+                let num = a['num']
+                let title = a["title"]
+                let image = a["image"]
+                let star_count = a["star"]
+                let comment = a["comment"]
+                let desc = a["desc"]
+                console.log(typeof (star_count)) // >>> 여기서 star_count는 float 실수( 9.xx ) 형태임. CSS 공부해서 네이버처럼 10점 만점으로 9.8점이면 98%만 별 칠하던가, 그게 힘들면 소수점 덜어주려면 Math.floor 쓰던가 해야함. number 형태로 바꿔줘야 함.
+                // star_count = Number(a["star"])
+
+                let star = '⭐'.repeat(star_count)
+                // src = "${image}" 가 아니라 그냥 src = ${image} 해도 오류 발생 안하네?!
+                let temp_html = `<div class="col">
+                                    <div class="card h-100">
+                                        <img src=${image}
+                                            class="card-img-top">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${title}</h5>
+                                            <p class="card-text">${desc}</p>
+                                            <p>${star}</p>
+                                            <p class="mycomment">${comment}</p>
+                                            <button onclick="delete_post(${num});" type="button" class="btn btn-outline-dark">삭제하기</button>
+                                        </div>
+                                    </div>
+                                </div>`
+                $("#cards-box").append(temp_html)
+            })
+        }
+
+        // --------------------------------------------------------------------------------------------
+        // flag 상태 체크
+        async function getFlag() {
+            let flag;
+            let queue1 = await fetch('/movie/flag')
+            // let queue1 = await new fetch('/movie/flag')
+            let queue2 = await queue1.json();
+            flag = await queue2["flag"]["flag"]
+            await console.log(flag)
+            return await flag
+        }
+        
+        // --------------------------------------------------------------------------------------------
+        
+        async function initFlag() {
+            await fetch('/movie/init')
+                .then((res) => res.json())
+                .then((data) => {
+                    let msg = data["msg"]
+                    console.log(msg)
+                    // localStorage.setItem("visit", JSON.stringify({"visit":true}))
+                    
+                })
+        }
+
+        // --------------------------------------------------------------------------------------------
+        async function loatateFlag() {
+            await fetch('/movie/lotate')
+                .then((res) => res.json())
+                .then((data) => {
+                    let msg = data["msg"]
+                    console.log(msg)
+                    window.location.reload()
+                    // localStorage.setItem("visit", JSON.stringify({"visit":true}))
+                    
+                })
+        }
+
+
+
+        // --------------------------------------------------------------------------------------------
+        // 보여줄 영화 초기에 무조건 cur 보이게 ++ 리로딩 후 sort 체크
+        async function getSort() {
+            let response;
+            let queue1 = await fetch('/movie/sort')
+            let queue2 = await queue1.json()
+            response = queue2["sort"]["sort"];
+            console.log(response);
+            return response
+        }
+
+        // --------------------------------------------------------------------------------------------
+        // 보여줄 영화 랭크 종류 나누기
+        async function changeSort(sort) {
+            // console.log(sort.value) // 누른버튼 종류찍힘
+            let sorts = sort.value
+            let formData = new FormData();
+            formData.append("sort_give", sorts)
+
+            let response;
+            await fetch('/movie/sort', { method: "POST", body: formData })
+                .then((res) => res.json())
+                .then((data) => {
+                    //{"sort":{'sort': "랭크종류"}}
+                    console.log(data)
+                    response = data["sort"]["sort"]
+                })
+            window.location.reload()
+            // return response
+
+        }
+
+
+        // --------------------------------------------------------------------------------------------
+        // 크롤링
+        async function crawling() {
+            let test = "test start"
+            console.log("test start")
+            let formData = new FormData();
+            formData.append("test_give", test)
+
+            let response;
+            await fetch('/movie/crawl', { method: "POST", body: formData })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data) // {"flag":{'flag': "s"}}
+                    let flag = data["flag"]["flag"]
+                    response = flag;
+                    // reload 풀어버림.
+                    window.location.reload()
+                })
+                .catch((error) => console.log(error));
+            return response
+        }
+
+        // --------------------------------------------------------------------------------------------
+        // 포스트별 고유 num 찾아서 포스트 삭제
+        function delete_post(num) {
+            let formData = new FormData();
+            formData.append("num_give", num)
+
+            fetch('/movie/delete', { method: "POST", body: formData })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data)
+                    alert(data['msg'])
+                    window.location.reload()
+                })
+                .catch((error) => {
+                    console.log("delete failed: ", error)
+                })
+        }
+
+        function open_box() {
+            $('#post-box').show()
+        }
+        function close_box() {
+            $('#post-box').hide()
+        }
+    </script>
+</head>
+
+<body>
+    <div class="mytitle">
+        <h1>내 생애 최고의 영화들</h1>
+        <button onclick="open_box()">영화 기록하기</button>
+    </div>
+    <div class="mypost" id="post-box">
+        <div class="form-floating mb-3">
+            <input id="url" type="email" class="form-control" placeholder="name@example.com">
+            <label>영화URL</label>
+        </div>
+        <!-- <div class="input-group mb-3" style="margin-top: 20px"> 부트스트랩 default style을 이런식으로 스타일 변경도 가능하다. -->
+        <!-- 기록하기 구역은 뺄거임. -->
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">별점</label>
+            <select class="form-select" id="star_give">
+                <option selected>-----선택하기-----</option>
+                <option value="1">⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐⭐⭐</option>
+            </select>
+        </div>
+        <div class="form-floating">
+            <textarea id="comment" class="form-control" placeholder="Leave a comment here"></textarea>
+            <label for="floatingTextarea2">코멘트</label>
+        </div>
+        <div class="mybtns">
+            <button onclick="" type="button" class="btn btn-dark">기록하기</button>
+            <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+        </div>
+    </div>
+    <div class="sortpage">
+        <button type="button" class="sort" value="cur" onclick="changeSort(this)">평점순(현재상영영화)CUR</button>
+        <button type="button" class="sort" value="cnt" onclick="changeSort(this)">조회순CNT</button>
+        <button type="button" class="sort" value="pnt" onclick="changeSort(this)">평점순(모든영화)PNT</button>
+    </div>
+    <div class="mycards">
+        <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://movie.naver.com/movie/bi/mi/basic.naver?code=217747" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">웅남이</h5>
+                        <p class="card-text">인간을 초월하는 짐승 같은 능력으로 국제 범죄 조직에 맞서는 웅남이의 좌충우돌 코미디 <웅남이>
+                        </p>
+                        <p>⭐⭐⭐</p>
+                        <p class="mycomment">코멘트</p>
+                        <button onclick="delete_post();" type="button" class="btn btn-outline-dark">삭제하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
