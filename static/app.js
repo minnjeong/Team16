@@ -12,16 +12,22 @@ function showLogout() {
 
 function onLogoutEvent() {
   $.removeCookie('mytoken');
+  $('#reg-id').val('');
   $('#login-id').val('');
+  $('#reg-pw').val('');
   $('#login-pw').val('');
+  $('#reg-nick').val('');
+
   showTabs();
 }
 
 function checkTokenExpiration() {
   const token = $.cookie('mytoken');
   if (token) {
+
     const payload = JSON.parse(atob(token.split('.')[1]));
     $('.greeting').text('Welcome! ' + payload['nickname']);
+
     const expirationTime = payload.exp * 1000;
     if (Date.now() >= expirationTime) {
       onLogoutEvent();
@@ -58,6 +64,24 @@ function login() {
   })
 }
 function register() {
+  const id = $('#reg-id').val().trim();
+  const pw = $('#reg-pw').val().trim();
+  const nickname = $('#reg-nick').val().trim();
+
+  if (!id || !pw || !nickname) {
+    alert('Please fill in all fields'); // 빈 문자열 확인
+    return;
+  }
+  const idRegex = /^[a-zA-Z0-9_]+$/; //ID 특수문자 확인
+  if (!idRegex.test(id)) {
+    alert('올바른 ID를 입력하세요!');
+    return;
+  }
+  const pwRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/;  // 패스워드 특수문자 확인
+  if (!pwRegex.test(pw)) {
+    alert('올바른 패스워드를 입력하세요!');
+    return;
+  }
   $.ajax({
     type: "POST",
     url: "/api/register",
@@ -100,4 +124,22 @@ $(document).ready(function () {
   });
 });
 
+window.addEventListener('load', function () {
+  var button = document.getElementById("back-to-top-button");
+
+  window.onscroll = function () {
+    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+      button.style.display = "block";
+    } else {
+      button.style.display = "none";
+    }
+  };
+
+  button.addEventListener('click', function () {
+    requestAnimationFrame(function () {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    });
+  });
+});
 
