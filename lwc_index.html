@@ -72,7 +72,7 @@
         /* 상단 우측 로그인 */
         .gnb_btn_login {
 
-            margin-left: 300px;
+            margin-left: 580px;
             float: left;
         }
 
@@ -86,15 +86,6 @@
             text-align: right;
             float: left;
         }
-
-        /* 검색창 */
-        .serch_area {
-            display: inline-block;
-            height: 40px;
-            margin-left: 10px;
-        }
-
-
         /* 상단 탭 */
         .top_area {
             display: flex;
@@ -134,40 +125,13 @@
             cursor: pointer;
             color: white;
         }
+        .char{
+            color: red;
+        }
     </style>
 
     <script>
-        $(document).ready(function () {
-            listing();
-        });
-
-        function listing() {
-            fetch('/movie').then((res) => res.json()).then((data) => {
-                let rows = data['result']
-                $('#cards-box').empty()
-                rows.forEach((a) => {
-                    let comment = a['comment']
-                    let title = a['title']
-                    let desc = a['desc']
-                    let image = a['image']
-                    let star = a['star']
-                    let url = a['url']
-
-                    let star_repeat = '⭐'.repeat(star)
-
-
-                    let temp_html = `<div class="col">
-                            <div class="card h-100">
-                                    <a href="${url}">
-                                        <img src="${image}" class="card-img-top">
-                                    </a>    
-                                    <p class = "star_star"> ${star_repeat}</p>
-                            </div>
-                    </div>`
-                    $('#cards-box').append(temp_html)
-                })
-            })
-        }
+       
     </script>
 
 </head>
@@ -184,7 +148,7 @@
                     alt="NAVER"></a>
 
             <!-- 영화 버튼 -->
-            <a href="index.html" title="영화서비스홈으로 바로가기" class="svc_logo"><img
+            <a href="lwc_index.html" title="영화서비스홈으로 바로가기" class="svc_logo"><img
                     src="https://ssl.pstatic.net/static/movie/2012/06/logo_svc.png" width="34" height="19" alt="영화"></a>
         </h1>
 
@@ -195,14 +159,7 @@
                     class="gnb_bg"></span><span class="gnb_bdr"></span><span class="gnb_txt">로그인</span></a>
 
             <!-- 검색창 -->
-            <div class="serch_area">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="카테고리 검색" aria-label="Recipient's username"
-                        aria-describedby="button-addon2">
-                    <a href="https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query="><button
-                            class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button></a>
-                </div>
-            </div>
+            
         </div>
     </div>
 
@@ -213,14 +170,14 @@
             <div class="left_tab">
                 <ul class="navi">
                     <li>
-                        <a href="index.html" title="영화홈" class="menu01_on"><strong>영화홈</strong></a>
+                        <a href="lwc_index.html" title="영화홈" class="menu01_on"><strong>영화홈</strong></a>
                     </li>
                     <li>
-                        <a href="index.html" title="상영작·예정작" class="menu02"><strong>상영작·예정작</strong></a>
+                        <a href="lwc_index.html" title="찜목록" class="menu02"><strong>찜목록</strong></a>
 
                     </li>
                     <li>
-                        <a href="index.html" title="영화랭킹" class="menu03"><strong>영화랭킹</strong></a><!-- N=a:LNB.db -->
+                        <a href="lwc_index.html" title="영화랭킹" class="menu03"><strong>영화랭킹</strong></a><!-- N=a:LNB.db -->
                     </li>
 
 
@@ -239,7 +196,7 @@
 
             <a class="tab-link on" class="right_tab_font_1" data-type="tab-1">박스오피스</a>
             <a class="tab-link" class="right_tab_font_2" data-type="tab-2">현재상영작</a>
-            <a class="tab-link" class="right_tab_font_3" data-type="tab-3">개봉예정작</a>
+            
 
             <hr />
             <!-- 영화 카드 -->
@@ -249,11 +206,131 @@
 
                     <div class="col">
                         <div class="card h-100">
-                            <a href="www.google.com">
-                                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=215932">
+                                <img src="https://movie-phinf.pstatic.net/20230206_264/1675649061557DaJHD_JPEG/movie_image.jpg?type=m203_290_2"
                                     class="card-img-top">
                             </a>
-                            <p class="star_star">⭐⭐⭐</p>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num7"><em>7</em></span><span class="char cnt_num5"><em>5</em></span><span class="char cnt_num7"><em>7</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>4</em></span><span class="char cnt_num6"><em>6</em></span><span class="char cnt_num9"><em>9</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=217747">
+                                <img src="https://movie-phinf.pstatic.net/20230322_142/1679450718624pOFXc_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num7"><em>1</em></span><span class="char cnt_num5"><em>1</em></span><span class="char cnt_num7"><em>7</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>5</em></span><span class="char cnt_num6"><em>9</em></span><span class="char cnt_num9"><em>0</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=223800">
+                                <img src="https://movie-phinf.pstatic.net/20221216_283/1671153488789d3g4j_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num5"><em>8</em></span><span class="char cnt_num7"><em>9</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>5</em></span><span class="char cnt_num6"><em>6</em></span><span class="char cnt_num9"><em>1</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=187923">
+                                <img src="https://movie-phinf.pstatic.net/20230315_171/1678842618052Q8wtc_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num5"><em>3</em></span><span class="char cnt_num7"><em>9</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>5</em></span><span class="char cnt_num6"><em>1</em></span><span class="char cnt_num9"><em>9</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=221174">
+                                <img src="https://movie-phinf.pstatic.net/20230320_293/1679279877582ii4eD_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num5"><em>2</em></span><span class="char cnt_num7"><em>2</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>4</em></span><span class="char cnt_num6"><em>7</em></span><span class="char cnt_num9"><em>0</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=224493">
+                                <img src="https://movie-phinf.pstatic.net/20230217_6/16766144681080d7Y2_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num5"><em>1</em></span><span class="char cnt_num7"><em>6</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>0</em></span><span class="char cnt_num6"><em>9</em></span><span class="char cnt_num9"><em>3</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=224503">
+                                <img src="https://movie-phinf.pstatic.net/20230217_188/1676599847794aO7NN_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num5"><em>1</em></span><span class="char cnt_num7"><em>4</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>9</em></span><span class="char cnt_num6"><em>6</em></span><span class="char cnt_num9"><em>5</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=212917">
+                                <img src="https://movie-phinf.pstatic.net/20230228_179/1677574576375M4xdl_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num5"><em>1</em></span><span class="char cnt_num7"><em>4</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>3</em></span><span class="char cnt_num6"><em>6</em></span><span class="char cnt_num9"><em>0</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=224494">
+                                <img style="height: 138px;" src="https://movie-phinf.pstatic.net/20230220_289/1676857485194VjrSj_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num5"><em>1</em></span><span class="char cnt_num7"><em>1</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>6</em></span><span class="char cnt_num6"><em>5</em></span><span class="char cnt_num9"><em>2</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=224534">
+                                <img src="https://movie-phinf.pstatic.net/20230222_250/1677053794916V5w4a_JPEG/movie_image.jpg?type=m203_290_2"
+                                    class="card-img-top">
+                            </a>
+                            <span class="baseplate r" style="color:black">
+                                <span class="spr stic_box l"><em>주말관객</em></span>
+                                <strong class="l"><span class="char cnt_num7"><em>7</em></span><span class="char cnt_comma"><em>,</em></span><span class="char cnt_num4"><em>5</em></span><span class="char cnt_num6"><em>1</em></span><span class="char cnt_num9"><em>0</em></span><span class="char cnt_per"><em>명</em></span></strong>
+                            </span>
                         </div>
 
                     </div>
@@ -265,8 +342,8 @@
 
                     <div class="col">
                         <div class="card h-100">
-                            <a href="https://www.google.com/">
-                                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=19335">
+                                <img src="https://movie-phinf.pstatic.net/20230313_9/1678671557948Hmsvz_JPEG/movie_image.jpg?type=m203_290_2"
                                     class="card-img-top">
                             </a>
                             <p class="star_star">⭐</p>
@@ -275,8 +352,8 @@
                     </div>
                     <div class="col">
                         <div class="card h-100">
-                            <a href="https://www.google.com/">
-                                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                            <a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=219603">
+                                <img src="https://movie-phinf.pstatic.net/20230308_127/1678255965773n4kJU_JPEG/movie_image.jpg?type=m203_290_2"
                                     class="card-img-top">
                             </a>
                             <p class="star_star">⭐</p>
@@ -315,61 +392,6 @@
                     </div>
                 </div>
             </div>
-            <div id="tab-3" class="tab-content">
-                <div class="row row-cols-1 row-cols-md-5 g-3" id="cards-box">
-                    <div class="col">
-                        <div class="card h-100">
-                            <a href="www.google.com">
-                                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                                    class="card-img-top">
-                            </a>
-                            <p class="star_star">⭐⭐</p>
-                        </div>
-
-                    </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <a href="www.google.com">
-                                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                                    class="card-img-top">
-                            </a>
-                            <p class="star_star">⭐⭐</p>
-                        </div>
-
-                    </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <a href="www.google.com">
-                                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                                    class="card-img-top">
-                            </a>
-                            <p class="star_star">⭐⭐</p>
-                        </div>
-
-                    </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <a href="www.google.com">
-                                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                                    class="card-img-top">
-                            </a>
-                            <p class="star_star">⭐⭐</p>
-                        </div>
-
-                    </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <a href="www.google.com">
-                                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                                    class="card-img-top">
-                            </a>
-                            <p class="star_star">⭐⭐</p>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
         </div>
         <!-- 탭 돌리기  -->
         <script>
